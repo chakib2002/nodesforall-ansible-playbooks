@@ -1,0 +1,89 @@
+---
+- name: SSH Key Generation, SSH Key Exchange, and Node Exporter Setup
+  hosts: all
+  become: yes
+  vars:
+    node_exporter_version: "1.8.2"
+    node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    ssh_key_path: "/data/keys_ssh/{{ username }}/{{ servername }}/ssh_key"
+  tasks:
+    - name: Create directory for storing SSH keys locally if it doesn't exist
+      file:
+        path: "{{ ssh_key_path | dirname }}"
+        state: directory
+        mode: '0700'
+      delegate_to: localhost  
+
+    - name: Generate SSH key pair
+      ansible.builtin.openssh_keypair:
+        path: "{{ ssh_key_path }}"
+        type: rsa
+        size: 2048
+      register: ssh_keypair_result
+      delegate_to: localhost
+
+    - name: Ensure SSH directory exists on remote server
+      file:
+        path: /root/.ssh
+        state: directory
+        mode: '0700'
+
+    - name: Copy generated public SSH key to server
+      ansible.builtin.copy:
+        content: "{{ ssh_keypair_result.public_key }}"
+        dest: /root/.ssh/authorized_keys
+        mode: '0644'
+
+    - name: Download Node Exporter
+      ansible.builtin.get_url:
+        url: "{{ node_exporter_url }}"
+        dest: /tmp/node_exporter.tar.gz
+
+    - name: Extract Node Exporter
+      ansible.builtin.unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /usr/local/bin/
+        remote_src: yes
+        creates: /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64
+
+    - name: Move Node Exporter binary to /usr/local/bin
+      command: mv /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter /usr/local/bin/node_exporter
+      args:
+        creates: /usr/local/bin/node_exporter
+
+    - name: Create Node Exporter user
+      ansible.builtin.user:
+        name: node_exporter
+        shell: /usr/sbin/nologin
+
+    - name: Create systemd service file for Node Exporter
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description=Node Exporter
+          Wants=network-online.target
+          After=network-online.target
+
+          [Service]
+          User=node_exporter
+          ExecStart=/usr/local/bin/node_exporter
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Enable and start Node Exporter service
+      ansible.builtin.systemd:
+        name: node_exporter
+        enabled: yes
+        state: started
+
+    - name: Clean up temporary files
+      ansible.builtin.file:
+        path: /tmp/node_exporter.tar.gz
+        state: absent
