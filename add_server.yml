@@ -5,7 +5,7 @@
   vars:
     node_exporter_version: "1.8.2"
     node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
-    ssh_key: "{{private_key}}"
+     ssh_key_path: "/data/keys_ssh/{{ username }}/{{ servername }}/ssh_key"
   tasks:
     - name: Download Node Exporter
       ansible.builtin.get_url:
