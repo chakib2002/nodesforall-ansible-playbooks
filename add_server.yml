@@ -1,6 +1,6 @@
 ---
 - name: Node Exporter Setup
-  hosts: {{ target }}
+  hosts:{{ target }}
   become: yes
   vars:
     node_exporter_version: "1.8.2"
