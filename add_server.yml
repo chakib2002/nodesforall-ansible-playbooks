@@ -1,6 +1,6 @@
 ---
-- name: SSH Key Generation, SSH Key Exchange, and Node Exporter Setup
-  hosts: all
+- name: Node Exporter Setup
+  hosts: {{ target }}
   become: yes
   vars:
     node_exporter_version: "1.8.2"
