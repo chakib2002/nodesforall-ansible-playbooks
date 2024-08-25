@@ -1,5 +1,5 @@
 - name: Uninstall Node Exporter and Remove SSH Public Key From Remote Server
-  hosts: {{ target }}
+  hosts: '{{ target }}'
   become: yes
   tasks:
 
