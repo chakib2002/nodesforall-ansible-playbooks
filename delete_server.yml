@@ -3,17 +3,21 @@
   become: yes
   tasks:
   
-    - name: Remove extracted Node Exporter directory (if applicable)
+    - name: Stop and disable Node Exporter service
+      ansible.builtin.systemd:
+        name: node_exporter
+        state: stopped
+        enabled: no
+
+    - name: Remove Node Exporter systemd service file
       ansible.builtin.file:
-        path: /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64
+        path: /etc/systemd/system/node_exporter.service
         state: absent
-        ignore_errors: yes 
 
     - name: Remove Node Exporter binary
       ansible.builtin.file:
         path: /usr/local/bin/node_exporter
-        state: absent 
-        ignore_errors: yes
+        state: absent
 
     - name: Remove Node Exporter user
       ansible.builtin.user:
@@ -26,4 +30,5 @@
         user: root
         state: absent
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDK7cxzXoY353dhLdF9r319fC4Rvu+OoMpr65YpGh/jkF5R8em2tXifQJVPCDdnI5Iz+c+ClXiEKpXmAK0FEJRWepbCWTsH4OCt77kMjy/8jTZfGniDLCtfs1MNmn4CRXT9OJObC39PC59kEr1XA4uGuYzyzfyxTEDdB9yMHN7E8FRyxOusNaZHQhJWNIXmSIj+cltxPMkuU3etDPyd8e6LevyvwMReG5ZxJvsdkXQlftYwib3/MhT2WxQkn47VCtTfoRySxkUnebsT8jtpqFbrtrLIOFvdBW55MQIz6f0pxYyCcnrHSZ9G1tgd+x5yQflxJkRkfG9yndrgHU/861gStYkeKyQ1qHX++vGxPponrHAFESUn7fcT7n9yYD2xalMcK+BBLJswrZT4BZxBWGGQbbYQxRheIsxS2BJQU2nny1J5NJD/pMK/fMjIVrFMJW71yjbGyYQMsCxmPHHzCc0Z5UfOLOY3AbI4fRDKeklLqm5Orxpzjl924bcVqkNvOgJAAc9/7RGrXGQJuSfBz3HlYBVE/NSFkwX0Q8QRKUco8QZejoOiNIZRIPC7cCbOcW9iuhTrevYSQ0ay3fntbIGo5aJcYVhPXPK/7oz3k9o7r/JOxc0fDKIeBGDgWOB+Mc0FM4/pdD0cA9/SE4hBVaZkf4fQhOgl7YxfbihRmyybYQ== nodesforall"
-        
+
+
