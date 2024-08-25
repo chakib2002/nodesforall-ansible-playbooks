@@ -1,6 +1,8 @@
 - name: Uninstall Node Exporter and Remove SSH Public Key From Remote Server
   hosts: '{{ target }}'
   become: yes
+  vars:
+    node_exporter_version: "1.8.2"
   tasks:
   
     - name: Stop and disable Node Exporter service
@@ -12,6 +14,11 @@
     - name: Remove Node Exporter systemd service file
       ansible.builtin.file:
         path: /etc/systemd/system/node_exporter.service
+        state: absent
+
+    - name: Remove Node Exporter binary
+      ansible.builtin.file:
+        path: /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64
         state: absent
 
     - name: Remove Node Exporter binary
