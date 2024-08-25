@@ -1,8 +1,6 @@
 - name: Uninstall Node Exporter and Remove SSH Public Key From Remote Server
   hosts: '{{ target }}'
   become: yes
-  vars:
-    node_exporter_version: "1.8.2"
   tasks:
   
     - name: Stop and disable Node Exporter service
