@@ -1,2 +1,4 @@
 all:
-    hosts: {}
+    hosts:
+        213.199.33.35:
+            ansible_user: root
