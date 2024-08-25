@@ -13,11 +13,18 @@
       ansible.builtin.file:
         path: /etc/systemd/system/node_exporter.service
         state: absent
+        
+    - name: Remove extracted Node Exporter directory (if applicable)
+      ansible.builtin.file:
+        path: /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64
+        state: absent
+        ignore_errors: yes 
 
     - name: Remove Node Exporter binary
       ansible.builtin.file:
         path: /usr/local/bin/node_exporter
-        state: absent
+        state: absent 
+        ignore_errors: yes
 
     - name: Remove Node Exporter user
       ansible.builtin.user:
