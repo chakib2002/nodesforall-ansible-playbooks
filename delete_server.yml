@@ -4,11 +4,6 @@
   vars:
     node_exporter_version: "1.8.2"
   tasks:
-
-   - name: Remove Node Exporter binary
-      ansible.builtin.file:
-        path: /usr/local/bin/node_exporter-{{ node_exporter_version }}.linux-amd64
-        state: absent
   
     - name: Stop and disable Node Exporter service
       ansible.builtin.systemd:
