@@ -1,7 +1,1 @@
-all:
-    hosts:
-        Ikmal@gmail.com:
-            - 213.199.33.35
-    Ikmal@gmail.com:
-        hosts:
-            ip: {ansible_user: root}
+
