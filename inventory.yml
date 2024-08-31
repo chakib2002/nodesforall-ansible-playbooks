@@ -1,4 +1,4 @@
 all:
     Ikmal@gmail.com:
         hosts:
-            ip: 213.199.33.35
+            213.199.33.35: {}
