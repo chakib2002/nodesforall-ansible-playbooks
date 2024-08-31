@@ -3,7 +3,7 @@
   become: yes
   tasks:
   
-    - name: Stop and disable Node Exporter service
+   - name: Stop and disable Node Exporter service
       ansible.builtin.systemd:
         name: node_exporter
         state: stopped
@@ -14,10 +14,11 @@
         path: /etc/systemd/system/node_exporter.service
         state: absent
 
-    - name: Remove Node Exporter binary
-      ansible.builtin.file:
-        path: /usr/local/bin/node_exporter
-        state: absent
+    - name: Remove existing Node Exporter directories and files
+      ansible.builtin.shell: rm -rf /usr/local/bin/node_exporter*
+      args:
+       warn: false
+      ignore_errors: yes
 
     - name: Remove Node Exporter user
       ansible.builtin.user:
