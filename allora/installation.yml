@@ -3,12 +3,8 @@
   hosts: "{{ target }}"
   become: true
 
-  vars_prompt:
-    - name: moniker
-      prompt: "Enter your node name"
-      private: false
-
   vars:
+    moniker: '{{ moniker }}'
     NETWORK: allora-testnet-1
     GENESIS_URL: "https://raw.githubusercontent.com/allora-network/networks/main/{{ NETWORK }}/genesis.json"
     SEEDS_URL: "https://raw.githubusercontent.com/allora-network/networks/main/{{ NETWORK }}/seeds.txt"
