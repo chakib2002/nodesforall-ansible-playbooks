@@ -4,3 +4,7 @@ all:
       hosts:
         213.199.33.35:
           ansible_user: root
+    john@gmail.com:
+      hosts:
+        213.199.33.35:
+          ansible_user: root
