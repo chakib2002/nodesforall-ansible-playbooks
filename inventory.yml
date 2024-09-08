@@ -1,1 +1,4 @@
-
+all:
+  test.admin@gmail.com:
+    hosts:
+      213.199.33.35:
