@@ -1,4 +1,6 @@
 all:
   children:
     test.admin@gmail.com:
-      hosts: {}
+      hosts:
+        192.168.1.51:
+          ansible_user: root
