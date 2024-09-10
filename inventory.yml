@@ -2,5 +2,5 @@ all:
   children:
     test.admin@gmail.com:
       hosts:
-        damous:
+        213.199.33.35:
           ansible_user: root
